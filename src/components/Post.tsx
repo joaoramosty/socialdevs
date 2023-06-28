@@ -7,9 +7,27 @@ import { Comment } from './Comment';
 
 import { Avatar } from './Avatar';
 
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from 'react';
 
-export function Post({author , publishedAt , content})
+interface Author{
+    name:string;
+    role:string;
+    avatarUrl:string;
+}
+
+interface Content{
+    type: 'paragraph'| 'link';
+    content:string;
+}
+
+interface PostProps{
+    author:Author;
+    publishedAt:Date;
+    content:Content[];
+    dateFormat: string
+}
+
+export function Post({author , publishedAt , content}:PostProps)
 {
     const [comments , setComments] = useState([
         "Post bem feito , parabéns !"
@@ -24,7 +42,7 @@ export function Post({author , publishedAt , content})
         addSuffix:true,
     })
 
-    function handleCreateNewComment(){
+    function handleCreateNewComment(event:FormEvent){
         event.preventDefault()
 
 
@@ -33,17 +51,17 @@ export function Post({author , publishedAt , content})
 
     }
 
-    function handleNewCommentChange(){
+    function handleNewCommentChange(event: ChangeEvent <HTMLTextAreaElement>){
         event.target.setCustomValidity('')
         setNewCommentText(event.target.value)
     }
 
-    function handleNewCommentInvalid(){
+    function handleNewCommentInvalid(event :InvalidEvent <HTMLTextAreaElement>){
         event.target.setCustomValidity('Esse campo é obrigatório!')
     }
     
 
-    function deleteComment(commentToDelete) {
+    function deleteComment(commentToDelete: string) {
         const commentsWithoutDeleteOne = comments.filter(comments =>{
             return comments !== commentToDelete;
         })
